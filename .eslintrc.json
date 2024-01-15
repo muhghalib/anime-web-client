@@ -1,3 +1,18 @@
 {
-  "extends": "next/core-web-vitals"
+	"extends": ["next/core-web-vitals", "eslint-config-prettier"],
+	"parser": "@typescript-eslint/parser",
+	"plugins": ["@typescript-eslint/eslint-plugin"],
+	"rules": {
+		"quotes": ["error", "single"],
+		"@typescript-eslint/consistent-type-imports": "warn",
+		"prefer-arrow-callback": "error",
+		"arrow-spacing": ["error", { "before": true, "after": true }],
+		"comma-spacing": ["error", { "before": false, "after": true }],
+		"no-console": ["warn", { "allow": ["warn", "error"] }],
+		"strict": "error",
+		"semi": ["error", "always"],
+		"brace-style": ["error", "1tbs", { "allowSingleLine": false }],
+		"array-callback-return": "warn",
+		"callback-return": "error"
+	}
 }
