@@ -4,11 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'otakudesu.cam',
-      },
-      {
-        protocol: 'https',
-        hostname: 'otakudesu.media',
+        hostname: 'otakudesu.*',
       },
     ],
   },
