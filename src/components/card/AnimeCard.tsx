@@ -13,7 +13,7 @@ export const AnimeCard = ({ eps, gambar, judul, slug }: AnimeCardProps) => {
   return (
     <Link href={`/${slug}`}>
       <Card className="w-full cursor-pointer group/anime-card-wrapper flex flex-col h-full rounded-none shadow-none border-none">
-        <Box className="w-full relative overflow-hidden aspect-[9/11]">
+        <Box className="w-full relative overflow-hidden aspect-[9/12]">
           <Image alt={judul} src={gambar} fill priority />
           <Box className="z-10 grid place-content-center absolute transition-all h-8 group-hover/anime-card-wrapper:h-full duration-500 bottom-0 w-full bg-black/70">
             <Typography size="sm" color="white" weight="regular">
@@ -36,7 +36,7 @@ export const AnimeCard = ({ eps, gambar, judul, slug }: AnimeCardProps) => {
 AnimeCard.Skeleton = () => {
   return (
     <Card className="w-full cursor-pointer group/anime-card-wrapper flex flex-col h-full rounded-none shadow-none border-none">
-      <Box className="w-full relative overflow-hidden aspect-[9/11]">
+      <Box className="w-full relative overflow-hidden aspect-[9/12]">
         <Skeleton className="w-full h-full" />
       </Box>
       <Box className="p-0 w-full pt-2">
