@@ -35,7 +35,7 @@ export const AnimeEpisodeList = ({
           .map((_, idx) => <Skeleton key={idx} className="w-full rounded-none h-10 mt-2" />)
       ) : (
         <>
-          {episodes.slice(0, 12).map(({ judul, slug, tanggal }, idx) => (
+          {episodes.slice(0, 24).map(({ judul, slug, tanggal }, idx) => (
             <Box
               key={idx}
               className="hover:bg-muted/30 group/item p-2 cursor-pointer w-full flex justify-between items-center"
@@ -59,7 +59,7 @@ export const AnimeEpisodeList = ({
             </Box>
           ))}
           <Drawer>
-            {episodes.length > 12 && (
+            {episodes.length > 24 && (
               <DrawerTrigger asChild>
                 <Button className="w-full text-sm rounded-none" variant="ghost">
                   View more episodes
@@ -81,7 +81,7 @@ export const AnimeEpisodeList = ({
                   </DrawerDescription>
                 </Box>
                 <ScrollArea>
-                  <ScrollAreaViewport className='h-full max-h-80'>
+                  <ScrollAreaViewport className="h-full max-h-80">
                     <Box className="flex divide-y-2 flex-col">
                       {episodes.map(({ judul, slug, tanggal }, idx) => (
                         <Box
