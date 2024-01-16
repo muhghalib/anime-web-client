@@ -70,9 +70,7 @@ export const MainNavbar = () => {
               );
             })}
           </Box>
-          <Box className="max-md:hidden" asChild>
-            <ThemeToggle />
-          </Box>
+          <ThemeToggle />
         </Box>
         <DropdownNavbarMenu />
       </Box>
@@ -104,21 +102,31 @@ export const MainNavbar = () => {
 };
 
 const DropdownNavbarMenu = () => {
+  const [dropdownIsOpen, setDropdownIsOpen] = useState(false);
+  const pathname = usePathname();
+
   return (
-    <DropdownMenu modal={false}>
+    <DropdownMenu open={dropdownIsOpen} onOpenChange={setDropdownIsOpen} modal={false}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="block w-fit h-fit p-2 text-foreground md:hidden">
           <Menu width={24} height={24} />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent className="flex flex-col space-y-1" align="end">
         {NAVBAR_LINK.map(({ label, url }, idx) => {
           return (
-            <DropdownMenuItem key={idx}>
-              <Typography size="sm" weight="light" asChild>
+            <Button
+              key={idx}
+              asChild
+              onClick={() => setDropdownIsOpen(false)}
+              size="sm"
+              className="font-normal justify-start"
+              variant={url == pathname ? 'secondary' : 'ghost'}
+            >
+              <DropdownMenuItem key={idx}>
                 <Link href={url}>{label}</Link>
-              </Typography>
-            </DropdownMenuItem>
+              </DropdownMenuItem>
+            </Button>
           );
         })}
         <ThemeToggle />
