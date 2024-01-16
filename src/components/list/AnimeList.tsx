@@ -12,7 +12,7 @@ export const AnimeList = ({ isLoading, anime }: AnimeListProps) => {
   return (
     <Box className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
       {isLoading
-        ? Array(6)
+        ? Array(10)
             .fill('')
             .map((_, idx) => {
               return <AnimeCard.Skeleton key={idx} />;

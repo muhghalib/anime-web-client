@@ -26,7 +26,6 @@ export const MainPage = () => {
         <Separator />
         <AnimeList anime={data} isLoading={isLoading} />
       </Box>
-      <AnimeList anime={data} isLoading={isLoading} />
       <Box className="w-full inline-flex py-4 items-center justify-center">
         {isFetching && !isLoading ? <Typography weight="regular">loading...</Typography> : null}
       </Box>
