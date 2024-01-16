@@ -5,7 +5,7 @@ export const useWindowBottomScroll = (call: () => any) => {
     const onscroll = () => {
       const scrolledTo = window.innerHeight + window.pageYOffset;
 
-      if (Math.ceil(scrolledTo) >= document.body.scrollHeight) call();
+      if (Math.ceil(scrolledTo + 1) >= document.body.scrollHeight) call();
     };
 
     window.addEventListener('scroll', onscroll);
