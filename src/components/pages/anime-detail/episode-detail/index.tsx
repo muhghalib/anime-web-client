@@ -4,11 +4,13 @@ import { EpisodeDownload } from './EpisodeDownload';
 import { EpisodeHeader } from './EpisodeHeader';
 import { EpisodeIframe } from './EpisodeIframe';
 import { EpisodeMirror } from './EpisodeMirror';
+import { EpisodeNavigation } from './EpisodeNavigation';
 import { EpisodeResolution } from './EpisodeResolution';
 import { Box } from '@app/components/shared/Box';
 
 import { useAnimeApi } from '@app/hooks/api/use-anime-api';
 import { useEpisodeApi } from '@app/hooks/api/use-episode-api';
+import { AnimeService } from '@app/services/anime';
 import { useEffect, useState } from 'react';
 
 export type AnimeEpisodePageProps = {
@@ -28,6 +30,8 @@ export const AnimeEpisodePage = ({
   const { data: iframe, isLoading: iframeIsLoading } = useAnimeApi().getIframe({
     content: mirrorContent,
   });
+
+  const animeService = new AnimeService(anime);
 
   useEffect(() => {
     if (episode) {
@@ -53,18 +57,21 @@ export const AnimeEpisodePage = ({
         isLoading={animeIsLoading || episodeIsLoading}
       />
       <Box className="flex flex-col space-y-2 w-full">
-        <EpisodeResolution
-          currentResolution={currentResolution}
-          isLoading={episodeIsLoading}
-          mirror={episode?.mirror}
-          onChange={(v) => setCurrentResolution(v)}
-        />
+        <Box className="flex w-full justify-between items-center">
+          <EpisodeResolution
+            currentResolution={currentResolution}
+            isLoading={episodeIsLoading}
+            mirror={episode?.mirror}
+            onChange={(v) => setCurrentResolution(v)}
+          />
+          <EpisodeNavigation episodes={animeService.getEpisodes()} isLoading={animeIsLoading} />
+        </Box>
         <EpisodeIframe
           isLoading={iframeIsLoading || episodeIsLoading}
           src={
-            (typeof iframe !== 'object'
-              && iframe?.match(/<iframe[^>]*src=["']([^"']*)["'][^>]*>/i)?.at(1)) ||
-              episode?.iframe
+            (typeof iframe !== 'object' &&
+              iframe?.match(/<iframe[^>]*src=["']([^"']*)["'][^>]*>/i)?.at(1)) ||
+            episode?.iframe
           }
         />
         <EpisodeMirror
