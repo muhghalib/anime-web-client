@@ -235,7 +235,7 @@ export const ANIME_EPISODE_PAGE_METADATA = ({
     'anime bahasa indonesia',
   ],
   robots: {
-    index: true,
+    index: false,
   },
   alternates: {
     canonical: `${config.app_url}/${anime_slug}/${episode_slug}`,
