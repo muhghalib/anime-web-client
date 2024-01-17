@@ -1,3 +1,4 @@
+import { config } from '@app/config';
 import type { Metadata } from 'next';
 
 export const MAIN_PAGE_METADATA: Metadata = {
@@ -12,6 +13,9 @@ export const MAIN_PAGE_METADATA: Metadata = {
     'kualitas resolusi tinggi',
     'update anime terbaru',
   ],
+  alternates: {
+    canonical: `${config.app_url}/`,
+  },
   other: {
     'og:title': 'Nonton Anime Terbaik dengan Subtitle Indonesia | Ghanime',
     'og:description':
@@ -46,6 +50,9 @@ export const SCHEDULE_PAGE_METADATA: Metadata = {
   robots: {
     index: true,
   },
+  alternates: {
+    canonical: `${config.app_url}/schedule`,
+  },
   other: {
     'og:title': 'Jadwal Update Anime Terbaru dan Terlengkap | Ghanime',
     'og:description':
@@ -78,6 +85,9 @@ export const ONGOING_ANIME_METADATA: Metadata = {
     'info anime',
     'jadwal rilis anime',
   ],
+  alternates: {
+    canonical: `${config.app_url}/ongoing-anime`,
+  },
   robots: {
     index: true,
   },
@@ -93,9 +103,11 @@ export const ONGOING_ANIME_METADATA: Metadata = {
 export const GENRE_PAGE_METADATA = ({
   genre,
   genres,
+  genre_slug,
 }: {
   genre?: AnimeGenre['judul'];
   genres: AnimeGenre[];
+  genre_slug: string;
 }): Metadata => ({
   title: `${genre || genre} anime | Ghanime`,
   description:
@@ -119,6 +131,9 @@ export const GENRE_PAGE_METADATA = ({
   robots: {
     index: true,
   },
+  alternates: {
+    canonical: `${config.app_url}/genre/${genre_slug}`,
+  },
   category: 'anime',
   other: {
     'og:title': `${genre || genre} anime | Ghanime`,
@@ -130,7 +145,13 @@ export const GENRE_PAGE_METADATA = ({
   },
 });
 
-export const ANIME_PAGE_METADATA = ({ anime }: { anime: Omit<Anime, 'eps'> }): Metadata => ({
+export const ANIME_PAGE_METADATA = ({
+  anime,
+  anime_slug,
+}: {
+  anime: Omit<Anime, 'eps'>;
+  anime_slug: string;
+}): Metadata => ({
   title: `${anime.judul} | Ghanime`,
   description: `Temukan pengalaman menonton anime${
     anime.nama.split(':')?.at(1) || ''
@@ -138,6 +159,9 @@ export const ANIME_PAGE_METADATA = ({ anime }: { anime: Omit<Anime, 'eps'> }): M
   category: 'anime',
   robots: {
     index: true,
+  },
+  alternates: {
+    canonical: `${config.app_url}/${anime_slug}`,
   },
   keywords: [
     'anime',
@@ -173,6 +197,9 @@ export const SEARCH_PAGE_METADATA = ({ search_query }: { search_query: string })
   robots: {
     index: false,
   },
+  alternates: {
+    canonical: `${config.app_url}/search/${search_query}`,
+  },
   other: {
     'og:title': `Cari ribuan anime terkait ${decodeURIComponent(search_query)} anime | Ghanime`,
     'og:site_name': 'ghanime',
@@ -181,7 +208,15 @@ export const SEARCH_PAGE_METADATA = ({ search_query }: { search_query: string })
   },
 });
 
-export const ANIME_EPISODE_PAGE_METADATA = ({ episode }: { episode: AnimeEpisode }): Metadata => ({
+export const ANIME_EPISODE_PAGE_METADATA = ({
+  episode,
+  anime_slug,
+  episode_slug,
+}: {
+  episode: AnimeEpisode;
+  anime_slug: string;
+  episode_slug: string;
+}): Metadata => ({
   title: `${episode.judul} | Ghanime`,
   description: `Temukan pengalaman menonton anime ${episode.judul} dengan Subtitle Indonesia. Saksikan setiap episode dengan terjemahan bahasa Indonesia dan resolusi penuh yang memikat. Jelajahi koleksi lengkap anime favorit, nikmati detail visual yang mengagumkan, dan rasakan keajaiban kisah-kisah unik yang hanya bisa Anda temui di sini. Nonton anime dengan resolusi lengkap sekarang untuk pengalaman menonton yang maksimal!`,
   category: 'anime',
@@ -201,6 +236,9 @@ export const ANIME_EPISODE_PAGE_METADATA = ({ episode }: { episode: AnimeEpisode
   ],
   robots: {
     index: true,
+  },
+  alternates: {
+    canonical: `${config.app_url}/${anime_slug}/${episode_slug}`,
   },
   other: {
     'og:title': `${episode.judul} | Ghanime`,

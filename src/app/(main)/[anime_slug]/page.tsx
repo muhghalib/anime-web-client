@@ -14,5 +14,5 @@ export const generateMetadata = async ({
     params: { slug: anime_slug },
   });
 
-  return ANIME_PAGE_METADATA({ anime });
+  return ANIME_PAGE_METADATA({ anime, anime_slug: anime_slug });
 };

@@ -17,10 +17,12 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: GenrePageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params: { genre_slug },
+}: GenrePageProps): Promise<Metadata> {
   const genres = await getAllAnimeGenre({});
 
-  const genre = genres.find(({ slug }) => slug == params.genre_slug);
+  const genre = genres.find(({ slug }) => slug == genre_slug);
 
-  return GENRE_PAGE_METADATA({ genre: genre?.judul, genres });
+  return GENRE_PAGE_METADATA({ genre: genre?.judul, genres, genre_slug: genre_slug });
 }

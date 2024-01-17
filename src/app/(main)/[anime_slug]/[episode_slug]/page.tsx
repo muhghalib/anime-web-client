@@ -7,8 +7,10 @@ import { ANIME_EPISODE_PAGE_METADATA } from '@app/constant/metadata';
 
 export default AnimeEpisodePage;
 
-export const generateMetadata = async ({ params: { episode_slug } }: AnimeEpisodePageProps) => {
+export const generateMetadata = async ({
+  params: { episode_slug, anime_slug },
+}: AnimeEpisodePageProps) => {
   const episode = await getEpisodeBySlug({ params: { slug: episode_slug } });
 
-  return ANIME_EPISODE_PAGE_METADATA({ episode });
+  return ANIME_EPISODE_PAGE_METADATA({ episode, anime_slug, episode_slug });
 };
