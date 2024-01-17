@@ -25,7 +25,7 @@ import { AppLogo } from '@app/components/shared/AppLogo';
 import { ScrollArea, ScrollAreaViewport } from '@app/components/shared/ScrollArea';
 import { ReactSpinners } from '@app/components/loader/ReactSpinners';
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDebounce } from '@app/hooks/utils/use-debounce';
 import { useAnimeApi } from '@app/hooks/api/use-anime-api';
 import { useGenreApi } from '@app/hooks/api/use-genre-api';
@@ -136,11 +136,22 @@ const DropdownNavbarMenu = () => {
 };
 
 const SearchInput = () => {
+  const router = useRouter();
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const { search_query } = useParams<{ search_query: string }>();
-  const [searchQuery, setSearchQuery] = useState(decodeURIComponent(search_query || ''));
-  const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const { data: searchResult, isLoading: searchResultIsLoading } = useAnimeApi().getAll(
+    {
+      search: searchQuery,
+    },
+    { enabled: searchQuery !== '' },
+  );
+
+  useEffect(() => {
+    setSearchQuery(search_query || '');
+  }, [search_query]);
 
   const handleOnChange = useDebounce((e: ChangeEvent<HTMLInputElement>) => {
     return setSearchQuery(e.target.value);
@@ -156,10 +167,6 @@ const SearchInput = () => {
   const handleOnClickResult: MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
   };
-
-  const { data: searchResult, isLoading: searchResultIsLoading } = useAnimeApi().getAll({
-    search: searchQuery,
-  });
 
   return (
     <Box className="flex group relative w-full max-w-xs items-center space-x-2 px-3 py-2.5 rounded-full border-2 border-muted">

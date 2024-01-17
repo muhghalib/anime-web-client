@@ -1,8 +1,17 @@
+import type { Metadata } from 'next';
+
 import { QueryProvider } from '@app/components/providers/QueryProvider';
 import { ThemeProvider } from '@app/components/providers/ThemeProvider';
 import Head from 'next/head';
 
 import './globals.css';
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Ghanime',
+    template: '%s | Ghanime',
+  },
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

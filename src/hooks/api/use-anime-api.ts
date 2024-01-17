@@ -20,13 +20,17 @@ const useInfiniteAnime = (query: Omit<GetAllAnimeArgs['query'], 'page'>) => {
   });
 };
 
-const useGetAllAnime = (query: Omit<GetAllAnimeArgs['query'], 'page'>) => {
+const useGetAllAnime = (
+  query: Omit<GetAllAnimeArgs['query'], 'page'>,
+  config?: { enabled?: boolean },
+) => {
   return useQuery({
     queryKey: ['anime', query],
     queryFn: () =>
       getAllAnime({
         query,
       }),
+    enabled: config?.enabled,
   });
 };
 
