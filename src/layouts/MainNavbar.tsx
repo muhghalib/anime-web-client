@@ -150,7 +150,7 @@ const SearchInput = () => {
   );
 
   useEffect(() => {
-    setSearchQuery(search_query || '');
+    setSearchQuery(encodeURIComponent(search_query || ''));
   }, [search_query]);
 
   const handleOnChange = useDebounce((e: ChangeEvent<HTMLInputElement>) => {
