@@ -190,21 +190,23 @@ const SearchInput = () => {
         )}
         <ScrollArea>
           <ScrollAreaViewport className="h-fit max-h-64">
-            {searchResult?.map(({ judul }, idx) => (
-              <Link
-                key={idx}
-                href="/search/[search_query]"
-                as={`/search/${judul}`}
-                onMouseDown={handleOnClickResult}
-                onClick={inputRef.current?.blur}
-              >
-                <Box className="w-full p-2 cursor-pointer hover:bg-muted-foreground/20">
-                  <Typography size="sm" className="line-clamp-2">
-                    {judul}
-                  </Typography>
-                </Box>
-              </Link>
-            ))}
+            {searchResult?.map(({ judul }, idx) => {
+              return (
+                <Link
+                  key={idx}
+                  href="/search/[search_query]"
+                  as={`/search/${judul}`}
+                  onMouseDown={handleOnClickResult}
+                  onClick={inputRef.current?.blur}
+                >
+                  <Box className="w-full p-2 cursor-pointer hover:bg-muted-foreground/20">
+                    <Typography size="sm" className="line-clamp-2">
+                      {judul}
+                    </Typography>
+                  </Box>
+                </Link>
+              );
+            })}
           </ScrollAreaViewport>
         </ScrollArea>
       </Card>
