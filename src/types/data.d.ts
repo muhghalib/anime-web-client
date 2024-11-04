@@ -1,77 +1,76 @@
 interface Anime {
-  gambar: string;
-  judul: string;
+  title: string;
+  image: string;
   slug: string;
-  nama: string;
-  namaJapan: string;
-  skor: string;
-  produser: string;
-  tipe: string;
+  rating: string;
+  type: string;
+  description: string;
+  genre: Genre[];
+  duration: string;
+  season: Slug;
+  producers: Producer[];
+  synopsis: string;
   status: string;
-  totalEpisode: string;
-  durasi: string;
-  rilis: string;
-  studio: string;
-  genre: string;
-  episodes: Pick<AnimeEpisode, 'judul' | 'slug' | 'tanggal'>[];
-  batch: AnimeBatch;
-  lengkap: Complete;
-  eps: string[];
-}
-
-interface AnimeEpisode {
-  judul: string;
-  slug: string;
-  tanggal: string;
-  iframe: string;
-  mirror: Mirror;
-  download: Download;
+  source: string;
+  total_episode: string;
+  studio: Slug;
+  released: string;
+  trailer: string;
+  episode: Episode[];
 }
 
 interface AnimeBatch {
-  judul: string;
+  title: string;
   slug: string;
   tanggal: string;
 }
 
 interface Complete {
-  judul: string;
+  title: string;
   slug: string;
   tanggal: string;
 }
 
-interface AnimeGenre {
-  judul: string;
+interface Producer {
+  title: string;
   slug: string;
 }
 
-type MirrorType = 'm360p' | 'm480p' | 'm720p';
+interface Episode {
+  title: string;
+  date: string;
+  slug: string;
+  iframe: Iframe[];
+  previousStreaming: string;
+  nextStreaming: string;
+  downloads: Download;
+}
 
-type MirrorContent = {
-  nama: string;
-  content: string;
+interface Genre {
+  title: string;
+  slug: string;
+}
+
+interface Iframe {
+  title: string;
+  post: string;
+  nume: string;
+  type: string;
+}
+
+type DownloadType = 'mkv' | 'mp4' | 'x265';
+
+type DownloadLink = {
+  title: string;
+  link: string;
 };
-
-type Mirror = {
-  [P in MirrorType]: MirrorContent[];
-};
-
-type DownloadType =
-  | 'd360pmp4'
-  | 'd480pmp4'
-  | 'd720pmp4'
-  | 'd1080pmp4'
-  | 'd480pmkv'
-  | 'd720pmkv'
-  | 'd1080pmkv';
-
-type DownloadContent = {
-  nama: string;
-  href: string;
-};
-
 type Download = {
-  [P in DownloadType]: DownloadContent[];
+  [P in DownloadType]: {
+    d360p: DownloadLink[];
+    d480p: DownloadLink[];
+    d720p: DownloadLink[];
+    d1080p: DownloadLink[];
+  };
 };
 
 type Schedule = {

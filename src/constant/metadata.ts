@@ -4,7 +4,7 @@ import type { Metadata } from 'next';
 export const MAIN_PAGE_METADATA: Metadata = {
   title: 'Nonton Anime Terbaik dengan Subtitle Indonesia',
   description:
-    'Temukan pengalaman menonton anime terbaik di Ghanime. Saksikan ratusan judul anime favorit dengan terjemahan bahasa Indonesia dan kualitas resolusi tinggi. Jelajahi berbagai genre, dapatkan update episode terbaru, dan bergabunglah dengan komunitas penggemar anime. Mulai petualangan anime Anda sekarang!',
+    'Temukan pengalaman menonton anime terbaik di Ghanime. Saksikan ratusan title anime favorit dengan terjemahan bahasa Indonesia dan kualitas resolusi tinggi. Jelajahi berbagai genre, dapatkan update episode terbaru, dan bergabunglah dengan komunitas penggemar anime. Mulai petualangan anime Anda sekarang!',
   keywords: [
     'nonton anime',
     'anime terbaik',
@@ -19,7 +19,7 @@ export const MAIN_PAGE_METADATA: Metadata = {
   other: {
     'og:title': 'Nonton Anime Terbaik dengan Subtitle Indonesia',
     'og:description':
-      'Temukan pengalaman menonton anime terbaik di Ghanime. Saksikan ratusan judul anime favorit dengan terjemahan bahasa Indonesia dan kualitas resolusi tinggi. Jelajahi berbagai genre, dapatkan update episode terbaru, dan bergabunglah dengan komunitas penggemar anime. Mulai petualangan anime Anda sekarang!',
+      'Temukan pengalaman menonton anime terbaik di Ghanime. Saksikan ratusan title anime favorit dengan terjemahan bahasa Indonesia dan kualitas resolusi tinggi. Jelajahi berbagai genre, dapatkan update episode terbaru, dan bergabunglah dengan komunitas penggemar anime. Mulai petualangan anime Anda sekarang!',
     'og:site_name': 'ghanime',
     'og:locale': 'id_ID',
   },
@@ -102,11 +102,9 @@ export const ONGOING_ANIME_METADATA: Metadata = {
 
 export const GENRE_PAGE_METADATA = ({
   genre,
-  genres,
   genre_slug,
 }: {
-  genre?: AnimeGenre['judul'];
-  genres: AnimeGenre[];
+  genre?: Genre['title'];
   genre_slug: string;
 }): Metadata => ({
   title: `${genre || genre} anime`,
@@ -127,7 +125,7 @@ export const GENRE_PAGE_METADATA = ({
     'streaming anime',
     'info genre anime',
     'anime bahasa indonesia',
-  ].concat(genres.map(({ judul }) => `${judul} anime`)),
+  ],
   robots: {
     index: true,
   },
@@ -152,9 +150,9 @@ export const ANIME_PAGE_METADATA = ({
   anime: Omit<Anime, 'eps'>;
   anime_slug: string;
 }): Metadata => ({
-  title: `${anime.judul}`,
+  title: `${anime.title}`,
   description: `Temukan pengalaman menonton anime${
-    anime.nama.split(':')?.at(1) || ''
+    anime.title.split(':')?.at(1) || ''
   } dengan Subtitle Indonesia. Saksikan setiap episode dengan terjemahan bahasa Indonesia dan resolusi penuh yang memikat. Jelajahi koleksi lengkap anime favorit, nikmati detail visual yang mengagumkan, dan rasakan keajaiban kisah-kisah unik yang hanya bisa Anda temui di sini. Nonton anime dengan resolusi lengkap sekarang untuk pengalaman menonton yang maksimal!`,
   category: 'anime',
   robots: {
@@ -176,14 +174,12 @@ export const ANIME_PAGE_METADATA = ({
     'rekomendasi anime',
     'streaming anime',
     'anime bahasa indonesia',
-    anime.judul,
-    anime.namaJapan.split(':')?.at(1) || '',
-    anime.nama.split(':')?.at(1) || '',
+    anime.title,
   ],
   other: {
-    'og:title': `${anime.judul}`,
+    'og:title': `${anime.title}`,
     'og:description': `Temukan pengalaman menonton anime${
-      anime.nama.split(':')?.at(1) || ''
+      anime.title.split(':')?.at(1) || ''
     } dengan Subtitle Indonesia. Saksikan setiap episode dengan terjemahan bahasa Indonesia dan resolusi penuh yang memikat. Jelajahi koleksi lengkap anime favorit, nikmati detail visual yang mengagumkan, dan rasakan keajaiban kisah-kisah unik yang hanya bisa Anda temui di sini. Nonton anime dengan resolusi lengkap sekarang untuk pengalaman menonton yang maksimal!`,
     'og:site_name': 'ghanime',
     'og:locale': 'id_ID',
@@ -191,17 +187,17 @@ export const ANIME_PAGE_METADATA = ({
   },
 });
 
-export const SEARCH_PAGE_METADATA = ({ search_query }: { search_query: string }): Metadata => ({
-  title: `Cari ribuan anime terkait ${decodeURIComponent(search_query)} anime`,
+export const SEARCH_PAGE_METADATA = ({ query }: { query: string }): Metadata => ({
+  title: `Cari ribuan anime terkait ${decodeURIComponent(query)} di ghanime`,
   category: 'anime',
   robots: {
     index: false,
   },
   alternates: {
-    canonical: `${config.app_url}/search/${search_query}`,
+    canonical: `${config.app_url}/search/${query}`,
   },
   other: {
-    'og:title': `Cari ribuan anime terkait ${decodeURIComponent(search_query)} anime`,
+    'og:title': `Cari ribuan anime terkait ${decodeURIComponent(query)} di ghanime`,
     'og:site_name': 'ghanime',
     'og:locale': 'id_ID',
     'og:type': 'video',
@@ -213,12 +209,12 @@ export const ANIME_EPISODE_PAGE_METADATA = ({
   anime_slug,
   episode_slug,
 }: {
-  episode: AnimeEpisode;
+  episode: Episode;
   anime_slug: string;
   episode_slug: string;
 }): Metadata => ({
-  title: `${episode.judul}`,
-  description: `Temukan pengalaman menonton anime ${episode.judul} dengan Subtitle Indonesia. Saksikan setiap episode dengan terjemahan bahasa Indonesia dan resolusi penuh yang memikat. Jelajahi koleksi lengkap anime favorit, nikmati detail visual yang mengagumkan, dan rasakan keajaiban kisah-kisah unik yang hanya bisa Anda temui di sini. Nonton anime dengan resolusi lengkap sekarang untuk pengalaman menonton yang maksimal!`,
+  title: `${episode.title}`,
+  description: `Temukan pengalaman menonton anime ${episode.title} dengan Subtitle Indonesia. Saksikan setiap episode dengan terjemahan bahasa Indonesia dan resolusi penuh yang memikat. Jelajahi koleksi lengkap anime favorit, nikmati detail visual yang mengagumkan, dan rasakan keajaiban kisah-kisah unik yang hanya bisa Anda temui di sini. Nonton anime dengan resolusi lengkap sekarang untuk pengalaman menonton yang maksimal!`,
   category: 'anime',
   keywords: [
     'anime',
@@ -241,8 +237,8 @@ export const ANIME_EPISODE_PAGE_METADATA = ({
     canonical: `${config.app_url}/${anime_slug}/${episode_slug}`,
   },
   other: {
-    'og:title': `${episode.judul}`,
-    'og:description': `Temukan pengalaman menonton anime ${episode.judul} dengan Subtitle Indonesia. Saksikan setiap episode dengan terjemahan bahasa Indonesia dan resolusi penuh yang memikat. Jelajahi koleksi lengkap anime favorit, nikmati detail visual yang mengagumkan, dan rasakan keajaiban kisah-kisah unik yang hanya bisa Anda temui di sini. Nonton anime dengan resolusi lengkap sekarang untuk pengalaman menonton yang maksimal!`,
+    'og:title': `${episode.title}`,
+    'og:description': `Temukan pengalaman menonton anime ${episode.title} dengan Subtitle Indonesia. Saksikan setiap episode dengan terjemahan bahasa Indonesia dan resolusi penuh yang memikat. Jelajahi koleksi lengkap anime favorit, nikmati detail visual yang mengagumkan, dan rasakan keajaiban kisah-kisah unik yang hanya bisa Anda temui di sini. Nonton anime dengan resolusi lengkap sekarang untuk pengalaman menonton yang maksimal!`,
     'og:site_name': 'ghanime',
     'og:locale': 'id_ID',
     'og:type': 'video',

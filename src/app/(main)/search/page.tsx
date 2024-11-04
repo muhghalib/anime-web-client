@@ -7,7 +7,7 @@ import { SEARCH_PAGE_METADATA } from '@app/constant/metadata';
 export default SearchPage;
 
 export const generateMetadata = async ({
-  params: { search_query },
+  searchParams: { query },
 }: SearchPageProps): Promise<Metadata> => {
-  return SEARCH_PAGE_METADATA({ search_query });
+  return SEARCH_PAGE_METADATA({ query });
 };

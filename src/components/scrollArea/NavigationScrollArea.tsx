@@ -18,55 +18,41 @@ export const NavigationScrollArea = ({
   const scrollAreaRef = useRef<React.ElementRef<typeof ScrollArea> | null>(null);
 
   const [navigationLeft, setNavigationLeft] = useState<'active' | 'inactive'>('inactive');
-  const [navigationRight, setNavigationRight] = useState<'active' | 'inactive'>('active');
+  const [navigationRight, setNavigationRight] = useState<'active' | 'inactive'>('inactive');
 
   const handleOnScroll: UIEventHandler<HTMLDivElement> = (e) => {
-    const { scrollLeft, clientWidth } = e.currentTarget;
-    const scrollWidth = e.currentTarget.scrollWidth - clientWidth;
+    const { scrollLeft, clientWidth, scrollWidth } = e.currentTarget;
 
-    if (scrollLeft > 0 && Math.ceil(scrollLeft) < scrollWidth) {
-      return (() => {
-        setNavigationLeft('active');
-        setNavigationRight('active');
-      })();
-    }
-
-    if (scrollLeft === 0) {
-      return setNavigationLeft('inactive');
-    }
-
-    if (Math.ceil(scrollLeft) >= scrollWidth) {
-      return setNavigationRight('inactive');
-    }
+    setNavigationLeft(scrollLeft > 0 ? 'active' : 'inactive');
+    setNavigationRight(Math.ceil(scrollLeft + clientWidth) >= scrollWidth ? 'inactive' : 'active');
   };
 
   const handleOnClickLeft = useCallback(() => {
     if (scrollViewportRef.current) {
       const { scrollLeft } = scrollViewportRef.current;
-
       scrollViewportRef.current.scrollTo({ left: scrollLeft - 150, behavior: 'smooth' });
     }
-  }, [scrollViewportRef.current]);
+  }, []);
 
   const handleOnClickRight = useCallback(() => {
     if (scrollViewportRef.current) {
-      const { scrollLeft } = scrollViewportRef.current;
+      const { scrollLeft, clientWidth, scrollWidth } = scrollViewportRef.current;
+      const maxScrollLeft = scrollWidth - clientWidth;
 
-      scrollViewportRef.current.scrollTo({ left: scrollLeft + 150, behavior: 'smooth' });
+      const newScrollLeft = Math.min(scrollLeft + 150, maxScrollLeft);
+
+      scrollViewportRef.current.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
     }
-  }, [scrollViewportRef.current]);
+  }, []);
 
   useEffect(() => {
     if (scrollAreaRef.current && scrollViewportRef.current) {
-      const [scrollArea, scrollViewport] = [scrollAreaRef.current, scrollViewportRef.current];
-      const [scrollAreaCw, scrollViewportCw] = [
-        scrollArea.clientWidth,
-        scrollViewport.children.item(0)?.children?.item(0)?.clientWidth || 0,
-      ];
+      const scrollAreaWidth = scrollAreaRef.current.clientWidth;
+      const scrollContentWidth = scrollViewportRef.current.scrollWidth;
 
-      if (scrollViewportCw < scrollAreaCw) setNavigationRight('inactive');
+      setNavigationRight(scrollContentWidth > scrollAreaWidth ? 'active' : 'inactive');
     }
-  }, [scrollAreaRef.current, scrollViewportRef.current]);
+  }, [children]);
 
   return (
     <ScrollArea
@@ -74,7 +60,7 @@ export const NavigationScrollArea = ({
       data-navigation-left={navigationLeft}
       data-navigation-right={navigationRight}
       className={cn(
-        'relative w-full isolate whitespace-nowrap before:content-["_"] before:absolute before:top-0 before:bottom-0 before:left-0 before:block before:h-full before:w-16 before:md:w-40 before:z-10 before:bg-[linear-gradient(270deg,_#fff0_0,_theme("colors.background")_90%,_theme("colors.background"))] data-[navigation-left=inactive]:before:hidden after:content-["_"] after:absolute after:top-0 after:bottom-0 after:right-0 after:block after:h-full after:w-16 after:md:w-40 after:z-10 after:bg-[linear-gradient(90deg,_#fff0_0,_theme("colors.background")_90%,_theme("colors.background"))] data-[navigation-right=inactive]:after:hidden',
+        'relative w-full isolate whitespace-nowrap before:content-["_"] before:absolute before:top-0 before:bottom-0 before:left-0 before:block before:h-full before:w-10 before:z-10 before:bg-[linear-gradient(270deg,_#fff0_0,_theme("colors.background")_90%,_theme("colors.background"))] data-[navigation-left=inactive]:before:hidden after:content-["_"] after:absolute after:top-0 after:bottom-0 after:right-0 after:block after:h-full after:w-10 after:z-10 after:bg-[linear-gradient(90deg,_#fff0_0,_theme("colors.background")_90%,_theme("colors.background"))] data-[navigation-right=inactive]:after:hidden',
         className,
       )}
       {...props}

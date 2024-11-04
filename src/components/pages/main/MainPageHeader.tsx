@@ -3,7 +3,7 @@ import { Typography } from '@app/components/shared/Typography';
 
 export const MainPageHeader = () => {
   return (
-    <Box className="w-full">
+    <Box as="header" className="w-full">
       <Typography size="xl">Recommendation</Typography>
     </Box>
   );

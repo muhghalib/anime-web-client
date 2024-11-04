@@ -5,13 +5,13 @@ import { EpisodeHeader } from './EpisodeHeader';
 import { EpisodeIframe } from './EpisodeIframe';
 import { EpisodeMirror } from './EpisodeMirror';
 import { EpisodeNavigation } from './EpisodeNavigation';
-import { EpisodeResolution } from './EpisodeResolution';
 import { Box } from '@app/components/shared/Box';
 
 import { useAnimeApi } from '@app/hooks/api/use-anime-api';
 import { useEpisodeApi } from '@app/hooks/api/use-episode-api';
-import { AnimeService } from '@app/services/anime';
 import { useEffect, useState } from 'react';
+
+import { iframeContext } from './use-iframe';
 
 export type AnimeEpisodePageProps = {
   params: { anime_slug: string; episode_slug: string };
@@ -20,69 +20,61 @@ export type AnimeEpisodePageProps = {
 export const AnimeEpisodePage = ({
   params: { anime_slug, episode_slug },
 }: AnimeEpisodePageProps) => {
-  const [mirrorContent, setMirrorContent] = useState<string>('');
-  const [currentResolution, setCurrentResolution] = useState<MirrorType>('m360p');
+  const [iframeData, setIframeData] = useState({ post: '', nume: '' });
 
   const { data: anime, isLoading: animeIsLoading } = useAnimeApi().getBySlug({ slug: anime_slug });
   const { data: episode, isLoading: episodeIsLoading } = useEpisodeApi().getBySlug({
     slug: episode_slug,
   });
+
   const { data: iframe, isLoading: iframeIsLoading } = useAnimeApi().getIframe({
-    content: mirrorContent,
+    post: iframeData.post,
+    nume: iframeData.nume,
   });
 
-  const animeService = new AnimeService(anime);
-
   useEffect(() => {
-    if (episode) {
-      for (const [key, mirror] of Object.entries(episode.mirror)) {
-        if (mirror.length > 0) {
-          setCurrentResolution(key as MirrorType);
-
-          break;
-        }
-      }
+    if (episode && !episodeIsLoading) {
+      setIframeData({
+        post: episode.iframe[0].post,
+        nume: episode.iframe[0].nume,
+      });
     }
-  }, [episode]);
-
-  useEffect(() => {
-    if (episode) setMirrorContent(episode.mirror[currentResolution]?.at(0)?.content || '');
-  }, [currentResolution, episode]);
+  }, [episode, episodeIsLoading]);
 
   return (
-    <Box className="w-full flex flex-col space-y-3">
-      <EpisodeHeader
-        animeTitle={anime?.judul}
-        episodeTitle={episode?.judul}
-        isLoading={animeIsLoading || episodeIsLoading}
-      />
-      <Box className="flex flex-col space-y-2 w-full">
-        <Box className="flex w-full justify-between items-center">
-          <EpisodeResolution
-            currentResolution={currentResolution}
-            isLoading={episodeIsLoading}
-            mirror={episode?.mirror}
-            onChange={(v) => setCurrentResolution(v)}
+    <iframeContext.Provider value={{ iframe: iframeData, setIframe: setIframeData }}>
+      <Box className="w-full flex flex-col space-y-3">
+        {animeIsLoading || episodeIsLoading ? (
+          <EpisodeHeader.Skeleton />
+        ) : (
+          <EpisodeHeader anime={{ title: anime!.title }} episode={{ title: episode!.title }} />
+        )}
+        {episodeIsLoading ? (
+          <EpisodeNavigation.Skeleton />
+        ) : (
+          <EpisodeNavigation
+            nextStreaming={episode!.nextStreaming}
+            previousStreaming={episode!.previousStreaming}
           />
-          <EpisodeNavigation episodes={animeService.getEpisodes()} isLoading={animeIsLoading} />
+        )}
+        <Box className="flex flex-col space-y-2 w-full">
+          {iframeIsLoading || episodeIsLoading ? (
+            <EpisodeIframe.Skeleton />
+          ) : (
+            <EpisodeIframe src={iframe!.iframe} />
+          )}
+          {episodeIsLoading ? (
+            <EpisodeMirror.Skeleton />
+          ) : (
+            <EpisodeMirror iframe={episode!.iframe} />
+          )}
         </Box>
-        <EpisodeIframe
-          isLoading={iframeIsLoading || episodeIsLoading}
-          src={
-            (typeof iframe !== 'object' &&
-              iframe?.match(/<iframe[^>]*src=["']([^"']*)["'][^>]*>/i)?.at(1)) ||
-            episode?.iframe
-          }
-        />
-        <EpisodeMirror
-          isLoading={episodeIsLoading}
-          mirror={episode?.mirror}
-          currentResolution={currentResolution}
-          currentMirror={mirrorContent}
-          onChange={(v) => setMirrorContent(v)}
-        />
+        {episodeIsLoading ? (
+          <EpisodeDownload.Skeleton />
+        ) : (
+          <EpisodeDownload download={episode!.downloads} />
+        )}
       </Box>
-      <EpisodeDownload isLoading={episodeIsLoading} download={episode?.download} />
-    </Box>
+    </iframeContext.Provider>
   );
 };
