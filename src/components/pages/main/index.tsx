@@ -5,30 +5,27 @@ import { Typography } from '@app/components/shared/Typography';
 import { MainPageHeader } from './MainPageHeader';
 import { Separator } from '@app/components/shared/Separator';
 import { Box } from '@app/components/shared/Box';
-import { ErrorConnection } from '@app/components/errors/ErrorConnection';
 
 import { useAnimeApi } from '@app/hooks/api/use-anime-api';
-import { useWindowBottomScroll } from '@app/hooks/utils/use-window-bottom-scroll';
+import { useScrollToBottom } from '@app/hooks/utils/use-scroll-to-bottom';
 
 export const MainPage = () => {
-  const { data, isLoading, fetchNextPage, isFetching, isError } = useAnimeApi().getInfiniteAnime(
-    {},
-  );
+  const { data, isLoading, fetchNextPage, isFetching } = useAnimeApi().getInfiniteAnime({});
 
-  useWindowBottomScroll(fetchNextPage);
-
-  if (isError) return <ErrorConnection />;
+  useScrollToBottom(fetchNextPage);
 
   return (
-    <Box className="flex flex-col">
+    <Box className="flex flex-col space-y-4">
       <Box className="w-full flex flex-col space-y-3">
         <MainPageHeader />
         <Separator />
         <AnimeList anime={data} isLoading={isLoading} />
       </Box>
-      <Box className="w-full inline-flex py-4 items-center justify-center">
-        {isFetching && !isLoading ? <Typography weight="regular">loading...</Typography> : null}
-      </Box>
+      {isFetching && !isLoading ? (
+        <Typography weight="regular" className="mx-auto">
+          loading...
+        </Typography>
+      ) : null}
     </Box>
   );
 };

@@ -7,17 +7,17 @@ import { PlayCircle } from 'lucide-react';
 
 import Link from 'next/link';
 
-type AnimeCardProps = Pick<Anime, 'judul' | 'slug' | 'gambar' | 'eps'>;
+type AnimeCardProps = Pick<Anime, 'title' | 'slug' | 'image' | 'rating' | 'status'>;
 
-export const AnimeCard = ({ eps, gambar, judul, slug }: AnimeCardProps) => {
+export const AnimeCard = ({ title, slug, image, rating, status }: AnimeCardProps) => {
   return (
-    <Link href={`/${slug}`}>
+    <Link href={`/anime/${slug}`}>
       <Card className="w-full cursor-pointer group/anime-card-wrapper flex flex-col h-full rounded-none shadow-none border-none">
         <Box className="w-full relative overflow-hidden aspect-[9/12]">
-          <Image alt={judul} src={gambar} fill priority />
+          <Image alt={title} src={image} fill priority />
           <Box className="z-10 grid place-content-center absolute transition-all h-8 group-hover/anime-card-wrapper:h-full duration-500 bottom-0 w-full bg-black/70">
             <Typography size="sm" color="white" weight="regular">
-              {eps.join('').trim()} episodes
+              rating {rating}
             </Typography>
             <Box className="mx-auto mt-1.5 text-white hidden group-hover/anime-card-wrapper:block">
               <PlayCircle width={52} height={52} strokeWidth={1} />
@@ -25,7 +25,7 @@ export const AnimeCard = ({ eps, gambar, judul, slug }: AnimeCardProps) => {
           </Box>
         </Box>
         <Box className="p-0 w-full pt-2">
-          <Typography className="line-clamp-2">{judul}</Typography>
+          <Typography className="line-clamp-2">{title}</Typography>
         </Box>
       </Card>
     </Link>

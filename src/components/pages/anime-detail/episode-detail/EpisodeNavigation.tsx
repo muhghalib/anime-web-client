@@ -6,60 +6,40 @@ import { Button } from '@app/components/shared/Button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Skeleton } from '@app/components/shared/Skeleton';
 
-import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 
-type EpisodeNavigationProps = {
-  episodes?: Anime['episodes'];
-  isLoading: boolean;
-};
+type EpisodeNavigationProps = Pick<Episode, 'previousStreaming' | 'nextStreaming'>;
 
-export const EpisodeNavigation = ({ episodes, isLoading }: EpisodeNavigationProps) => {
-  const [currentEpsIdx, setCurrentEpsIdx] = useState<number>();
-
-  const { episode_slug, anime_slug } = useParams<{ episode_slug: string; anime_slug: string }>();
-
-  useEffect(() => {
-    if (episodes) setCurrentEpsIdx(episodes.findIndex(({ slug }) => slug == episode_slug));
-  }, [episodes]);
-
-  const nextEpsSlug = useMemo(() => {
-    if (currentEpsIdx != undefined && episodes && currentEpsIdx != episodes.length - 1) {
-      return episodes[currentEpsIdx + 1].slug;
-    }
-  }, [episodes, currentEpsIdx]);
-
-  const prevEpsSlug = useMemo(() => {
-    if (currentEpsIdx != undefined && episodes && currentEpsIdx != 0) {
-      return episodes[currentEpsIdx - 1].slug;
-    }
-  }, [episodes, currentEpsIdx]);
+export const EpisodeNavigation = ({ previousStreaming, nextStreaming }: EpisodeNavigationProps) => {
+  const { anime_slug } = useParams<{ episode_slug: string; anime_slug: string }>();
 
   return (
-    <Box className="flex space-x-1">
-      {isLoading ? (
-        <>
-          <Skeleton className="h-10 w-14" />
-          <Skeleton className="h-10 w-14" />
-        </>
-      ) : (
-        <>
-          {prevEpsSlug && (
-            <Button asChild variant="secondary" className="w-max text-xs">
-              <Link href="/[anime_slug]/[episode_slug]" as={`/${anime_slug}/${prevEpsSlug}`}>
-                <ChevronLeft width={16} height={16} strokeWidth={3} /> prev
-              </Link>
-            </Button>
-          )}
-          {nextEpsSlug && (
-            <Button asChild variant="secondary" className="w-max text-xs">
-              <Link href="/[anime_slug]/[episode_slug]" as={`/${anime_slug}/${nextEpsSlug}`}>
-                next <ChevronRight width={16} height={16} strokeWidth={3} />
-              </Link>
-            </Button>
-          )}
-        </>
+    <Box className="w-full flex items-center">
+      {previousStreaming != '#' && (
+        <Button asChild variant="secondary" className="w-max text-xs">
+          <Link href={`/anime/${anime_slug}/episode/${previousStreaming}`}>
+            <ChevronLeft width={16} height={16} strokeWidth={3} /> prev eps
+          </Link>
+        </Button>
       )}
+      {nextStreaming != '#' && (
+        <Button asChild variant="secondary" className="w-max text-xs ml-auto">
+          <Link href={`/anime/${anime_slug}/episode/${nextStreaming}`}>
+            next eps
+            <ChevronRight width={16} height={16} strokeWidth={3} />
+          </Link>
+        </Button>
+      )}
+    </Box>
+  );
+};
+
+// eslint-disable-next-line react/display-name
+EpisodeNavigation.Skeleton = () => {
+  return (
+    <Box className="w-full flex items-center justify-between">
+      <Skeleton className="h-10 w-14" />
+      <Skeleton className="h-10 w-14" />
     </Box>
   );
 };

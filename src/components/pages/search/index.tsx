@@ -1,42 +1,64 @@
 'use client';
 
 import { Separator } from '@app/components/shared/Separator';
-import { ErrorConnection } from '@app/components/errors/ErrorConnection';
-import { SearchPageHeader } from './SearchPageHeader';
 import { Typography } from '@app/components/shared/Typography';
 import { AnimeList } from '@app/components/list/AnimeList';
 import { Box } from '@app/components/shared/Box';
 
 import { useAnimeApi } from '@app/hooks/api/use-anime-api';
-import { useWindowBottomScroll } from '@app/hooks/utils/use-window-bottom-scroll';
+import { useScrollToBottom } from '@app/hooks/utils/use-scroll-to-bottom';
+import { SearchActionBar } from './SearchActionBar';
+import { useFilterApi } from '@app/hooks/api/use-filter-api';
 
 export type SearchPageProps = {
-  params: { search_query: string };
+  searchParams: {
+    query: string;
+    genre?: string | string[];
+    order?: string;
+    type?: string;
+    status?: string;
+  };
 };
 
-export const SearchPage = ({ params: { search_query } }: SearchPageProps) => {
+export const SearchPage = ({
+  searchParams: { query, genre, status, order, type },
+}: SearchPageProps) => {
   const {
     data: anime,
     isLoading: animeIsLoading,
-    isError: animeIsError,
-    isFetching:isFetchingAnime,
-    fetchNextPage:fetchNextAnime
+    isFetching: isFetchingAnime,
+    fetchNextPage: fetchNextAnime,
   } = useAnimeApi().getInfiniteAnime({
-    search: search_query,
+    title: query,
+    genre,
+    status,
+    type,
+    order,
   });
 
-  useWindowBottomScroll(fetchNextAnime);
+  const { data: filter, isLoading: filterIsLoading } = useFilterApi().getAll();
 
-  if (animeIsError) return <ErrorConnection />;
+  useScrollToBottom(fetchNextAnime);
 
   return (
-    <Box className="flex flex-col w-full space-y-4">
-      <SearchPageHeader searchQuery={decodeURIComponent(search_query)} />
+    <Box className="relative flex flex-col w-full h-full space-y-4">
+      {filterIsLoading ? (
+        <SearchActionBar.Skeleton />
+      ) : (
+        <SearchActionBar
+          genre={filter!.genre}
+          order={filter!.order}
+          status={filter!.status}
+          type={filter!.type}
+        />
+      )}
       <Separator />
       <AnimeList anime={anime} isLoading={animeIsLoading} />
-      <Box className="w-full inline-flex py-4 items-center justify-center">
-        {isFetchingAnime && !animeIsLoading ? <Typography weight="regular">loading...</Typography> : null}
-      </Box>
+      {isFetchingAnime && !animeIsLoading ? (
+        <Typography weight="regular" className="mx-auto">
+          loading...
+        </Typography>
+      ) : null}
     </Box>
   );
 };

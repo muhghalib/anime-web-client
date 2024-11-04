@@ -6,7 +6,7 @@ import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 const useInfiniteAnime = (query: Omit<GetAllAnimeArgs['query'], 'page'>) => {
   return useInfiniteQuery({
     queryKey: ['infinite-anime', query],
-    queryFn: ({ pageParam = 1 }) =>
+    queryFn: ({ pageParam }) =>
       getAllAnime({
         query: {
           page: pageParam.toString(),
@@ -43,7 +43,7 @@ const useGetAnimeBySlug = (params: GetAnimeBySlugArgs['params']) => {
 
 const useGetAnimeIframe = (query: GetAnimeIframeArgs['query']) => {
   return useQuery({
-    queryKey: [`anime-iframe-${query.content}`],
+    queryKey: [`anime-iframe-${query.post}-${query.nume}`],
     queryFn: () => getAnimeIframe({ query }),
   });
 };

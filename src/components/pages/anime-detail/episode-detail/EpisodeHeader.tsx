@@ -3,27 +3,27 @@ import { Skeleton } from '@app/components/shared/Skeleton';
 import { Typography } from '@app/components/shared/Typography';
 
 type EpisodeHeaderProps = {
-  animeTitle?: Anime['judul'];
-  episodeTitle?: AnimeEpisode['judul'];
-  isLoading: boolean;
+  anime: Pick<Anime, 'title'>;
+  episode: Pick<Episode, 'title'>;
 };
 
-export const EpisodeHeader = ({ animeTitle, episodeTitle, isLoading }: EpisodeHeaderProps) => {
+export const EpisodeHeader = ({ anime, episode }: EpisodeHeaderProps) => {
   return (
     <Box className="flex flex-col space-y-1">
-      {isLoading ? (
-        <>
-          <Skeleton className="w-full max-w-56 h-6" />
-          <Skeleton className="w-full max-w-32 h-4" />
-        </>
-      ) : (
-        <>
-          <Typography>{animeTitle!}</Typography>
-          <Typography size="sm" color="muted">
-            {episodeTitle!}
-          </Typography>
-        </>
-      )}
+      <Typography>{anime.title!.replace(/^(nonton anime|nonton|anime)\s*/i, '')}</Typography>
+      <Typography size="sm" color="muted">
+        {episode.title!}
+      </Typography>
+    </Box>
+  );
+};
+
+// eslint-disable-next-line react/display-name
+EpisodeHeader.Skeleton = () => {
+  return (
+    <Box className="flex flex-col space-y-1">
+      <Skeleton className="w-full max-w-56 h-6" />
+      <Skeleton className="w-full max-w-32 h-4" />
     </Box>
   );
 };

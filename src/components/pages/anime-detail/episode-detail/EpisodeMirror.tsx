@@ -1,48 +1,60 @@
-import type { MouseEvent } from 'react';
+import { memo, type MouseEvent } from 'react';
 
 import { NavigationScrollArea } from '@app/components/scrollArea/NavigationScrollArea';
 import { Box } from '@app/components/shared/Box';
 import { Button } from '@app/components/shared/Button';
 import { Skeleton } from '@app/components/shared/Skeleton';
+import { useIframe } from './use-iframe';
 
-type EpisodeMirrorProps = {
-  mirror?: AnimeEpisode['mirror'];
-  onChange: (v: string) => any;
-  currentResolution: MirrorType;
-  currentMirror: string;
-  isLoading: boolean;
-};
+type EpisodeMirrorProps = Pick<Episode, 'iframe'>;
 
-export const EpisodeMirror = ({
-  mirror,
-  onChange,
-  currentResolution,
-  currentMirror,
-  isLoading,
-}: EpisodeMirrorProps) => {
-  const handleOnClickMirror = (e: MouseEvent<HTMLButtonElement>, content: string) => {
+export const EpisodeMirror = ({ iframe }: EpisodeMirrorProps) => {
+  const { iframe: currentIframe, setIframe } = useIframe();
+
+  const handleOnClickMirror = (e: MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    onChange(content);
+    const dataset = e.currentTarget.dataset;
+
+    setIframe({
+      nume: dataset.nume as string,
+      post: dataset.post as string,
+    });
   };
 
   return (
     <NavigationScrollArea>
       <Box className="flex space-x-2">
-        {isLoading
-          ? Array(3)
-              .fill('')
-              .map((_, idx) => <Skeleton key={idx} className="h-10 w-16" />)
-          : mirror![currentResolution].map(({ nama, content }) => (
-              <Button
-                key={content}
-                onClick={(e) => handleOnClickMirror(e, content)}
-                className="w-max text-xs"
-                variant={currentMirror == content ? 'secondary' : 'ghost'}
-              >
-                {nama}
-              </Button>
-            ))}
+        {iframe.map(({ post, nume, title }, idx) => {
+          return (
+            <Button
+              key={idx}
+              data-nume={nume}
+              data-post={post}
+              onClick={(e) => handleOnClickMirror(e)}
+              className="w-max text-xs"
+              variant={currentIframe.nume == nume ? 'secondary' : 'ghost'}
+              disabled={currentIframe.nume == nume}
+            >
+              {title}
+            </Button>
+          );
+        })}
+      </Box>
+    </NavigationScrollArea>
+  );
+};
+
+// eslint-disable-next-line react/display-name
+EpisodeMirror.Skeleton = () => {
+  return (
+    <NavigationScrollArea>
+      <Box className="flex space-x-2">
+        {Array(3)
+          .fill('')
+          .map((_, idx) => (
+            <Skeleton key={idx} className="h-10 w-16" />
+          ))}
       </Box>
     </NavigationScrollArea>
   );

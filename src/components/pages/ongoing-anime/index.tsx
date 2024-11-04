@@ -5,30 +5,29 @@ import { Box } from '@app/components/shared/Box';
 import { AnimeList } from '@app/components/list/AnimeList';
 import { Separator } from '@app/components/shared/Separator';
 import { OngoingPageHeader } from './OngoingPageHeader';
-import { ErrorConnection } from '@app/components/errors/ErrorConnection';
 
 import { useAnimeApi } from '@app/hooks/api/use-anime-api';
-import { useWindowBottomScroll } from '@app/hooks/utils/use-window-bottom-scroll';
+import { useScrollToBottom } from '@app/hooks/utils/use-scroll-to-bottom';
 
 export const OngoingAnimePage = () => {
-  const { data, isLoading, fetchNextPage, isFetching, isError } = useAnimeApi().getInfiniteAnime({
-    type: 'ongoing',
+  const { data, isLoading, fetchNextPage, isFetching } = useAnimeApi().getInfiniteAnime({
+    status: 'Currently Airing',
   });
 
-  useWindowBottomScroll(fetchNextPage);
-
-  if (isError) return <ErrorConnection />;
+  useScrollToBottom(fetchNextPage);
 
   return (
-    <Box className="flex flex-col">
+    <Box className="flex flex-col space-y-4">
       <Box className="w-full flex flex-col space-y-3">
         <OngoingPageHeader />
         <Separator />
         <AnimeList anime={data} isLoading={isLoading} />
       </Box>
-      <Box className="w-full inline-flex py-4 items-center justify-center">
-        {isFetching && !isLoading ? <Typography weight="regular">loading...</Typography> : null}
-      </Box>
+      {isFetching && !isLoading ? (
+        <Typography weight="regular" className="mx-auto">
+          loading...
+        </Typography>
+      ) : null}
     </Box>
   );
 };

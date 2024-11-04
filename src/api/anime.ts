@@ -10,8 +10,10 @@ export type GetAllAnimeArgs = RequestArgs<
     query: {
       page?: string;
       type?: string;
+      status?: string;
       genre?: string | Array<string>;
-      search?: string;
+      order?: string;
+      title?: string;
     };
   }
 >;
@@ -41,15 +43,14 @@ export type GetAnimeIframeArgs = RequestArgs<
   'GET',
   {
     query: {
-      content: string;
+      post: string;
+      nume: string;
     };
   }
 >;
 
-export const getAnimeIframe = requestHandler<GetAnimeIframeArgs, string>(async ({ query }) => {
-  const { content } = query;
-
-  const nonce = await apiClient('/nonce').get();
-
-  return apiClient(`/getIframe?${objectToQueryParams({ content, nonce: nonce.data })}`).get();
-});
+export const getAnimeIframe = requestHandler<GetAnimeIframeArgs, { iframe: string }>(
+  ({ query }) => {
+    return apiClient(`/iframe?${objectToQueryParams(query)}`).get();
+  },
+);

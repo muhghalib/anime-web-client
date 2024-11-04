@@ -12,7 +12,7 @@ export type GetEpisodeBySlugArgs = RequestArgs<
   }
 >;
 
-export const getEpisodeBySlug = requestHandler<GetEpisodeBySlugArgs, AnimeEpisode>(({ params }) => {
+export const getEpisodeBySlug = requestHandler<GetEpisodeBySlugArgs, Episode>(({ params }) => {
   const { slug } = params;
 
   return apiClient(`/episode/${slug}`).get();

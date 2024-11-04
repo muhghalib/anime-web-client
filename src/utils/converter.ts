@@ -9,7 +9,7 @@ export const objectToQueryParams = (obj: Object): string => {
       for (let i = 0; i < value.length; i++) {
         if (value[i] == '' || value[i] == undefined) continue;
 
-        result += `${key}=${encodeURIComponent(value[i])}`;
+        result += `${key}=${value[i]}`;
 
         if (i != value.length - 1) result += '&';
       }
@@ -17,7 +17,7 @@ export const objectToQueryParams = (obj: Object): string => {
       continue;
     }
 
-    result += `${key}=${encodeURIComponent(value)}`;
+    result += `${key}=${value}`;
   }
 
   return result;
