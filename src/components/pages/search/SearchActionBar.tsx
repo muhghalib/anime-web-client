@@ -21,7 +21,7 @@ import { Filter } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 import type { FormEventHandler } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const SearchActionBar = ({
   status,
@@ -39,13 +39,18 @@ export const SearchActionBar = ({
     type?: string;
     order?: string;
     genre?: string[];
-  }>({
-    query: searchParams.get('query') || undefined,
-    status: searchParams.get('status') || undefined,
-    type: searchParams.get('type') || undefined,
-    order: searchParams.get('order') || undefined,
-    genre: searchParams.getAll('genre'),
-  });
+  }>({});
+
+  useEffect(() => {
+    setFormData((formData) => ({
+      ...formData,
+      query: searchParams.get('query') || undefined,
+      status: searchParams.get('status') || undefined,
+      type: searchParams.get('type') || undefined,
+      order: searchParams.get('order') || undefined,
+      genre: searchParams.getAll('genre'),
+    }));
+  }, [searchParams]);
 
   const handleOnSubmit: FormEventHandler<HTMLFormElement> = (e) => {
     e.preventDefault();
