@@ -114,17 +114,20 @@ const DropdownNavbarMenu = () => {
 
 const SearchInput = () => {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+
   const inputRef = useRef<HTMLInputElement | null>(null);
 
-  const searchParams = useSearchParams();
-
-  const [searchQuery, setSearchQuery] = useState(
-    decodeURIComponent(searchParams.get('query') || ''),
-  );
+  const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    setSearchQuery(decodeURIComponent(searchParams.get('query') || ''));
-  }, [searchParams]);
+    if (pathname == '/search' && Boolean(searchParams.get('query'))) {
+      setSearchQuery(decodeURIComponent(searchParams.get('query') as string));
+    }
+
+    setSearchQuery('');
+  }, [pathname, searchParams]);
 
   const { data: searchResult, isLoading: searchResultIsLoading } = useAnimeApi().getAll(
     {
@@ -134,8 +137,8 @@ const SearchInput = () => {
   );
 
   const handleOnChange = useDebounce((e: ChangeEvent<HTMLInputElement>) => {
-    return setSearchQuery(e.target.value);
-  }, 200);
+    setSearchQuery(e.target.value);
+  }, 0);
 
   const handleOnKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
     if (e.key == 'Enter') {
@@ -153,15 +156,19 @@ const SearchInput = () => {
       </Button>
       <Input
         type="text"
+        name="query"
         ref={inputRef}
+        defaultValue={searchQuery}
         leftIcon={{ variant: 'Search' }}
         placeholder="Search anime disini..."
         className="rounded-full max-sm:hidden"
-        defaultValue={searchQuery}
         onKeyDown={handleOnKeyDown}
         onChange={handleOnChange}
       />
-      <Card className="w-full z-10 absolute top-12 p-0 left-0 hidden group-[:has(:focus)]:flex flex-col h-max">
+      <Card
+        data-active={searchQuery != ''}
+        className="w-full z-10 absolute top-12 p-0 left-0 hidden group-has-[:focus]:data-[active=true]:flex flex-col h-max"
+      >
         {searchResultIsLoading && (
           <Box className="w-fit mx-auto py-2">
             <Typography weight="regular">loading...</Typography>
