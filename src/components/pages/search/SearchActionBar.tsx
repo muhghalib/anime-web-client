@@ -122,7 +122,7 @@ export const SearchActionBar = ({
               <RadioGroup
                 name="order"
                 onValueChange={(value) => {
-                  setFormData((formData) => ({ ...formData, type: value }));
+                  setFormData((formData) => ({ ...formData, order: value }));
                 }}
                 value={formData.order}
                 className="flex flex-row flex-wrap"
