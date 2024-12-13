@@ -1,0 +1,9 @@
+# Docker
+.dockerignore
+Dockerfile
+
+# Etc
+.env.example
+node_modules
+README.md
+.next
